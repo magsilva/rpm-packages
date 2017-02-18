@@ -1,0 +1,122 @@
+diff -urN mupdf-1.10a-source/Makefile mupdf-1.10a-source_new/Makefile
+--- mupdf-1.10a-source/Makefile	2016-11-28 11:34:04.000000000 -0200
++++ mupdf-1.10a-source_new/Makefile	2017-02-17 14:08:09.604582361 -0200
+@@ -153,15 +152,13 @@
+ # --- Library ---
+ 
+ MUPDF_LIB = $(OUT)/libmupdf.a
+-THIRD_LIB = $(OUT)/libmupdfthird.a
+ 
+ MUPDF_OBJ := $(FITZ_OBJ) $(FONT_OBJ) $(PDF_OBJ) $(XPS_OBJ) $(SVG_OBJ) $(CBZ_OBJ) $(HTML_OBJ) $(GPRF_OBJ)
+ THIRD_OBJ := $(FREETYPE_OBJ) $(HARFBUZZ_OBJ) $(JBIG2DEC_OBJ) $(JPEG_OBJ) $(JPEGXR_OBJ) $(LURATECH_OBJ) $(MUJS_OBJ) $(OPENJPEG_OBJ) $(ZLIB_OBJ)
+ 
+ $(MUPDF_LIB) : $(MUPDF_OBJ)
+-$(THIRD_LIB) : $(THIRD_OBJ)
+ 
+-INSTALL_LIBS := $(MUPDF_LIB) $(THIRD_LIB)
++INSTALL_LIBS := $(MUPDF_LIB)
+ 
+ # --- Rules ---
+ 
+@@ -265,39 +262,39 @@
+ $(MUTOOL_OBJ): $(FITZ_HDR) $(PDF_HDR)
+ MUTOOL_LIB = $(OUT)/libmutools.a
+ $(MUTOOL_LIB) : $(MUTOOL_OBJ)
+-$(MUTOOL) : $(MUTOOL_LIB) $(MUPDF_LIB) $(THIRD_LIB)
++$(MUTOOL) : $(MUTOOL_LIB) $(MUPDF_LIB)
+ 	$(LINK_CMD)
+ 
+ MURASTER := $(OUT)/muraster
+ MURASTER_OBJ := $(addprefix $(OUT)/tools/, muraster.o)
+ $(MURASTER_OBJ): $(FITZ_HDR)
+-$(MURASTER) : $(MURASTER_OBJ) $(MUPDF_LIB) $(THIRD_LIB)
++$(MURASTER) : $(MURASTER_OBJ) $(MUPDF_LIB)
+ 	$(LINK_CMD)
+ 
+ MJSGEN := $(OUT)/mjsgen
+ MJSGEN_OBJ := $(addprefix $(OUT)/tools/, mjsgen.o)
+ $(MUTOOL_OBJ): $(FITZ_HDR) $(PDF_HDR)
+-$(MJSGEN) : $(MJSGEN_OBJ) $(MUPDF_LIB) $(THIRD_LIB)
++$(MJSGEN) : $(MJSGEN_OBJ) $(MUPDF_LIB)
+ 	$(LINK_CMD)
+ 
+ MUJSTEST := $(OUT)/mujstest
+ MUJSTEST_OBJ := $(addprefix $(OUT)/platform/x11/, jstest_main.o pdfapp.o)
+ $(MUJSTEST_OBJ) : $(FITZ_HDR) $(PDF_HDR)
+-$(MUJSTEST) : $(MUJSTEST_OBJ) $(MUPDF_LIB) $(THIRD_LIB)
++$(MUJSTEST) : $(MUJSTEST_OBJ) $(MUPDF_LIB)
+ 	$(LINK_CMD)
+ 
+ ifeq "$(HAVE_X11)" "yes"
+ MUVIEW_X11 := $(OUT)/mupdf-x11
+ MUVIEW_X11_OBJ := $(addprefix $(OUT)/platform/x11/, x11_main.o x11_image.o pdfapp.o)
+ $(MUVIEW_X11_OBJ) : $(FITZ_HDR) $(PDF_HDR)
+-$(MUVIEW_X11) : $(MUVIEW_X11_OBJ) $(MUPDF_LIB) $(THIRD_LIB)
++$(MUVIEW_X11) : $(MUVIEW_X11_OBJ) $(MUPDF_LIB)
+ 	$(LINK_CMD) $(X11_LIBS)
+ 
+ ifeq "$(HAVE_CURL)" "yes"
+ MUVIEW_X11_CURL := $(OUT)/mupdf-x11-curl
+ MUVIEW_X11_CURL_OBJ := $(addprefix $(OUT)/platform/x11/curl/, x11_main.o x11_image.o pdfapp.o curl_stream.o)
+ $(MUVIEW_X11_CURL_OBJ) : $(FITZ_HDR) $(PDF_HDR)
+-$(MUVIEW_X11_CURL) : $(MUVIEW_X11_CURL_OBJ) $(MUPDF_LIB) $(THIRD_LIB) $(CURL_LIB)
++$(MUVIEW_X11_CURL) : $(MUVIEW_X11_CURL_OBJ) $(MUPDF_LIB) $(CURL_LIB)
+ 	$(LINK_CMD) $(X11_LIBS) $(CURL_LIBS) $(SYS_CURL_DEPS)
+ endif
+ endif
+@@ -306,7 +303,7 @@
+ MUVIEW_GLFW := $(OUT)/mupdf-gl
+ MUVIEW_GLFW_OBJ := $(addprefix $(OUT)/platform/gl/, gl-font.o gl-input.o gl-main.o)
+ $(MUVIEW_GLFW_OBJ) : $(FITZ_HDR) $(PDF_HDR) platform/gl/gl-app.h
+-$(MUVIEW_GLFW) : $(MUVIEW_GLFW_OBJ) $(MUPDF_LIB) $(THIRD_LIB) $(GLFW_LIB)
++$(MUVIEW_GLFW) : $(MUVIEW_GLFW_OBJ) $(MUPDF_LIB) $(GLFW_LIB)
+ 	$(LINK_CMD) $(GLFW_LIBS)
+ endif
+ 
+@@ -314,7 +311,7 @@
+ MUVIEW_WIN32 := $(OUT)/mupdf
+ MUVIEW_WIN32_OBJ := $(addprefix $(OUT)/platform/x11/, win_main.o pdfapp.o win_res.o)
+ $(MUVIEW_WIN32_OBJ) : $(FITZ_HDR) $(PDF_HDR)
+-$(MUVIEW_WIN32) : $(MUVIEW_WIN32_OBJ) $(MUPDF_LIB) $(THIRD_LIB)
++$(MUVIEW_WIN32) : $(MUVIEW_WIN32_OBJ) $(MUPDF_LIB)
+ 	$(LINK_CMD) $(WIN32_LIBS)
+ endif
+ 
+@@ -327,9 +324,9 @@
+ 
+ examples: $(OUT)/example $(OUT)/multi-threaded
+ 
+-$(OUT)/example: docs/example.c $(MUPDF_LIB) $(THIRD_LIB)
++$(OUT)/example: docs/example.c $(MUPDF_LIB)
+ 	$(LINK_CMD) $(CFLAGS)
+-$(OUT)/multi-threaded: docs/multi-threaded.c $(MUPDF_LIB) $(THIRD_LIB)
++$(OUT)/multi-threaded: docs/multi-threaded.c $(MUPDF_LIB)
+ 	$(LINK_CMD) $(CFLAGS) -lpthread
+ 
+ # --- Update version string header ---
+@@ -358,7 +355,6 @@
+ mandir ?= $(prefix)/share/man
+ docdir ?= $(prefix)/share/doc/mupdf
+ 
+-third: $(THIRD_LIB)
+ extra: $(CURL_LIB) $(GLFW_LIB)
+ libs: $(INSTALL_LIBS)
+ apps: $(INSTALL_APPS)
+@@ -415,4 +411,4 @@
+ android: generate
+ 	$(MAKE) -C platform/android/viewer
+ 
+-.PHONY: all clean nuke install third libs apps generate
++.PHONY: all clean nuke install libs apps generate
+diff -urN mupdf-1.10a-source/platform/java/Makefile mupdf-1.10a-source_new/platform/java/Makefile
+--- mupdf-1.10a-source/platform/java/Makefile	2016-11-28 11:34:04.000000000 -0200
++++ mupdf-1.10a-source_new/platform/java/Makefile	2017-02-17 14:02:29.007437798 -0200
+@@ -25,7 +25,7 @@
+ 
+ default: $(MUPDF_JAVA) libmupdf.jar
+ 
+-MUPDF_CORE := ../../build/java/libmupdf.a ../../build/java/libmupdfthird.a
++MUPDF_CORE := ../../build/java/libmupdf.a
+ ifeq "$(OS)" "Linux"
+ $(MUPDF_CORE) :
+ 	$(MAKE) -C ../.. OUT=build/java XCFLAGS=-fPIC FREETYPE_DIR=/foo ZLIB_DIR=/foo build=release libs
