@@ -85,6 +85,9 @@ update-desktop-database &> /dev/null || :
 %{_libdir}/lib%{name}.a
 
 %changelog
+* Sat Feb 18 2017 Marco Aurélio Graciotto Silva <magsilva@gmail.com> 1.10a-1
+- New package built with tito. 
+
 * Fri Feb 17 2017 Marco Aurélio Graciotto Silva <magsilva@gmail.com> - 1.10a-1
 - New release 1.10a
 
